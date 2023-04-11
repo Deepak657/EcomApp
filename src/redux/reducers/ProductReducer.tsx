@@ -1,5 +1,32 @@
-// import { product } from "../actionTypes/ProductType";
-// import { IProduct } from "../../components/CreateProduct";
+import { IProduct } from "../../components/CreateProduct";
+import { CREATE_PRODUCT, DELETE_PRODUCT, ProductAction } from "../actions/ProductAction";
+
+export interface ProductState {
+    products: IProduct[];
+}
+
+const initState: ProductState = {
+    products: []
+};
+
+export const productReducer = (state: ProductState = initState, action: ProductAction): ProductState => {
+    switch (action.type) {
+        case CREATE_PRODUCT:
+            return {
+                ...state,
+                products: [...state.products, action.product]
+            };
+
+        case DELETE_PRODUCT:
+            return {
+                ...state,
+                products: state.products.filter(product => product.id !== action.productId)
+            };
+
+        default:
+            return state;
+    }
+}
 
 // const initialProductState = {
 //   products: [],
@@ -61,3 +88,4 @@
 //   }
 // };
 
+export { }

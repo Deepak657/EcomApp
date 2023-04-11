@@ -1,81 +1,83 @@
+import { Button, Grid, TextField } from "@mui/material";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { createProduct } from "../redux/actions/ProductAction";
+import { useNavigate, useParams } from "react-router-dom";
+import { useGSelector } from "../redux/store";
 export interface IProduct {
+  id: number;
   name: string;
   description: string | null;
   price: number;
-  tax: number;
+  tax: number | null;
 }
 
-const CreateProduct : React.FC= () => {
-  const [product, setProduct] = useState<IProduct>({
-    name: "",
-    description: "",
-    price: 0,
-    tax: 0,
-  });
+const CreateProduct: React.FC = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setProduct({ ...product, [e.target.name]: e.target.value });
-  };
+  const { id } = useParams<'id'>();
 
-  const handleSubmit = (e: React.FormEvent):void => {
-    e.preventDefault();
-    const date = new Date();
-    const time = date.getTime();
-    const createItem = {
-      id: time,
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      tax: product.tax,
+  const product = useGSelector(state => state.productState.products.find(product => product.id === parseInt(id || '')));
+
+  console.log({ product })
+
+  const [productName, setProductName] = useState('');
+  const [description, setDescription] = useState<string | null>(null);
+  const [price, setPrice] = useState(0);
+  const [tax, setTax] = useState<number | null>(null);
+
+  const saveProduct = () => {
+    const product: IProduct = {
+      id: new Date().getTime(),
+      name: productName,
+      description,
+      price,
+      tax
     };
 
-    console.log(createItem);
-    
+    dispatch(createProduct(product));
+
+    navigate('/products');
+  };
+
+  const updateProduct = () => {
+    // todo - create update action
   };
 
   return (
-    <>
-      <form action="" onSubmit={handleSubmit}>
-        {/* <input
-          type="file"
-          accept="image/*"
-          name="img"
-          onChange={handleChange}
-        /> */}
-        <input
-          type="text"
-          name="name"
-          placeholder="name"
-          value={product.name}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="description"
-          placeholder="description"
-          value={product.description || ""}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="price"
-          placeholder="price"
-          value={product.price}
-          onChange={handleChange}
-        />
+    <Grid container flexDirection="column" alignItems="left" item xs={12}>
+      <TextField
+        label="Product Name"
+        value={productName}
+        margin="normal"
+        onChange={({ currentTarget }) => setProductName(currentTarget.value)}
+      />
 
-        <input
-          type="text"
-          name="tax"
-          placeholder="tax"
-          value={product.tax}
-          onChange={handleChange}
-        />
+      <TextField
+        label="Product Description"
+        value={description || ''}
+        margin="normal"
+        onChange={({ currentTarget }) => setDescription(currentTarget.value)}
+      />
 
-        <button type="submit">Add Product</button>
-      </form>
-    </>
+      <TextField
+        label="Product Price"
+        value={price || ''}
+        margin="normal"
+        type="number"
+        onChange={({ currentTarget }) => setPrice(parseFloat(currentTarget.value))}
+      />
+
+      <TextField
+        label="Tax (in percentage)"
+        value={tax || ''}
+        margin="normal"
+        onChange={({ currentTarget }) => setTax(parseFloat(currentTarget.value))}
+      />
+
+      <Button onClick={id ? updateProduct : saveProduct}>{id ? 'Update' : 'Create'} Product</Button>
+    </Grid>
   );
 };
 

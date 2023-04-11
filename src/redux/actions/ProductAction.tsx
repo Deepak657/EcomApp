@@ -1,38 +1,63 @@
 import { product } from "../actionTypes/ProductType";
 import { IProduct } from "../../components/CreateProduct";
 
-export const createProduct = (item : IProduct) => {
+
+export const CREATE_PRODUCT = 'CREATE_PRODUCT';
+interface CreateProduct {
+  type: typeof CREATE_PRODUCT;
+  product: IProduct;
+}
+
+export const createProduct = (product: IProduct): CreateProduct => {
   return {
-    type: product.CREATE_PRODUCT,
-    payload: item,
+    type: CREATE_PRODUCT,
+    product
   };
 };
-export const selectProduct = (item : IProduct) => {
+
+
+export const DELETE_PRODUCT = 'DELETE_PRODUCT';
+
+interface DeleteProduct {
+  type: typeof DELETE_PRODUCT;
+  productId: number;
+}
+
+export const deleteProduct = (productId: number): DeleteProduct => {
+  return {
+    type: DELETE_PRODUCT,
+    productId
+  };
+}
+
+export type ProductAction = CreateProduct | DeleteProduct;
+
+
+
+
+
+
+
+export const selectProduct = (item: IProduct) => {
   return {
     type: product.SELECT_PRODUCT,
     payload: item,
   };
 };
 
-export const updateProduct = (item : IProduct) => {
+export const updateProduct = (item: IProduct) => {
   return {
     type: product.UPDATE_PRODUCT,
     payload: item,
   };
 };
-export const addCart = (item : IProduct) => {
+export const addCart = (item: IProduct) => {
   return {
     type: product.ADD_CART,
     payload: item,
   };
 };
 
-export const deleteProduct = (id : number) => {
-  return {
-    type: product.DELETE_PRODUCT,
-    payload: id,
-  };
-};
 // export const login = (user) => {
 //   return {
 //     type: product.LOG_IN,
