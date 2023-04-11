@@ -1,7 +1,7 @@
 import { Button, Grid, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createProduct } from "../redux/actions/ProductAction";
+import { createProduct, updateProduct } from "../redux/actions/ProductAction";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGSelector } from "../redux/store";
 export interface IProduct {
@@ -19,8 +19,6 @@ const CreateProduct: React.FC = () => {
   const { id } = useParams<'id'>();
 
   const product = useGSelector(state => state.productState.products.find(product => product.id === parseInt(id || '')));
-
-  console.log({ product })
 
   const [productName, setProductName] = useState('');
   const [description, setDescription] = useState<string | null>(null);
@@ -41,8 +39,18 @@ const CreateProduct: React.FC = () => {
     navigate('/products');
   };
 
-  const updateProduct = () => {
+  const handleUpdateProduct = () => {
+    if (!product) {
+      return;
+    }
     // todo - create update action
+    dispatch(updateProduct({
+      ...product,
+      name: productName,
+      description,
+      price,
+      tax
+    }));
   };
 
   return (
@@ -76,7 +84,7 @@ const CreateProduct: React.FC = () => {
         onChange={({ currentTarget }) => setTax(parseFloat(currentTarget.value))}
       />
 
-      <Button onClick={id ? updateProduct : saveProduct}>{id ? 'Update' : 'Create'} Product</Button>
+      <Button onClick={id ? handleUpdateProduct : saveProduct}>{id ? 'Update' : 'Create'} Product</Button>
     </Grid>
   );
 };

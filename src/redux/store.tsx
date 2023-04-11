@@ -12,5 +12,5 @@ export interface Store {
 }
 
 export const rootReducer = createStore(combineReducers({
-    productState: productReducer
+    productState: productReducer,
 }), applyMiddleware(logger));

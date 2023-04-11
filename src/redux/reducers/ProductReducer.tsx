@@ -1,5 +1,5 @@
 import { IProduct } from "../../components/CreateProduct";
-import { CREATE_PRODUCT, DELETE_PRODUCT, ProductAction } from "../actions/ProductAction";
+import { CREATE_PRODUCT, DELETE_PRODUCT, ProductAction, UPDATE_PRODUCT } from "../actions/ProductAction";
 
 export interface ProductState {
     products: IProduct[];
@@ -15,6 +15,16 @@ export const productReducer = (state: ProductState = initState, action: ProductA
             return {
                 ...state,
                 products: [...state.products, action.product]
+            };
+
+        case UPDATE_PRODUCT:
+            return {
+                ...state,
+                products: state.products.map(product =>
+                    action.product.id === product.id
+                        ? action.product
+                        : product
+                )
             };
 
         case DELETE_PRODUCT:

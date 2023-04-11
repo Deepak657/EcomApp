@@ -30,7 +30,20 @@ export const deleteProduct = (productId: number): DeleteProduct => {
   };
 }
 
-export type ProductAction = CreateProduct | DeleteProduct;
+export const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
+interface UpdateProduct {
+  type: typeof UPDATE_PRODUCT;
+  product: IProduct;
+}
+
+export const updateProduct = (product: IProduct): UpdateProduct => {
+  return {
+    type: UPDATE_PRODUCT,
+    product,
+  };
+};
+
+export type ProductAction = CreateProduct | UpdateProduct | DeleteProduct;
 
 
 
@@ -45,12 +58,7 @@ export const selectProduct = (item: IProduct) => {
   };
 };
 
-export const updateProduct = (item: IProduct) => {
-  return {
-    type: product.UPDATE_PRODUCT,
-    payload: item,
-  };
-};
+
 export const addCart = (item: IProduct) => {
   return {
     type: product.ADD_CART,
